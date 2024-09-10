@@ -12,8 +12,11 @@ class WriteCommandPage extends StatefulWidget {
 }
 
 class _WriteCommandPageState extends State<WriteCommandPage> {
-  final TextEditingController _commandController = TextEditingController();
-  final List<String> _commandHistory = [];
+  bool _isOn = false;
+
+  void _sendCommand(String command) async {
+    await widget.characteristic.write(command.codeUnits);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,38 +24,26 @@ class _WriteCommandPageState extends State<WriteCommandPage> {
       appBar: AppBar(
         title: Text('Write Command'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _commandController,
-              decoration: InputDecoration(
-                labelText: 'Enter Command',
-                border: OutlineInputBorder(),
+            Expanded(
+              child: Image.asset(
+                'assets/logo.png', // Ensure this path matches the actual location of your logo
+                fit: BoxFit.contain,
               ),
             ),
-            SizedBox(height: 16),
-            TextButton(
-              child: Text('SEND'),
-              onPressed: () async {
-                String command = _commandController.text;
-                await widget.characteristic.write(command.codeUnits);
+            SizedBox(height: 10),
+            SwitchListTile(
+              title: Text(_isOn ? 'Turn Off' : 'Turn On'),
+              value: _isOn,
+              onChanged: (bool value) {
                 setState(() {
-                  _commandHistory.add(command);
-                  _commandController.clear();
+                  _isOn = value;
+                  _sendCommand(_isOn ? '1' : '0');
                 });
               },
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: _commandHistory.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_commandHistory[index]),
-                  );
-                },
-              ),
             ),
           ],
         ),
