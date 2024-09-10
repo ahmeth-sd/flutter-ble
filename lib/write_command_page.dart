@@ -36,8 +36,24 @@ class _WriteCommandPageState extends State<WriteCommandPage> {
             ),
             SizedBox(height: 10),
             SwitchListTile(
-              title: Text(_isOn ? 'Turn Off' : 'Turn On'),
+              title: Text(
+                _isOn ? 'Turn Off' : 'Turn On',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                'Tap to toggle',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
               value: _isOn,
+              activeColor: Colors.green,
+              inactiveThumbColor: Colors.red,
+              inactiveTrackColor: Colors.red.withOpacity(0.5),
               onChanged: (bool value) {
                 setState(() {
                   _isOn = value;

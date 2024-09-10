@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'bluetooth_helper.dart';
-import 'connected_device_page.dart'; // Import the ConnectedPage
+import 'connected_device_page.dart';
+import 'qr_scan_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -31,12 +32,11 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
   final BluetoothHelper _bluetoothHelper = BluetoothHelper();
-  final String targetMacAddress = "D0:EF:76:47:E3:AA"; // Hedef cihazın MAC adresi
   BluetoothDevice? _connectedDevice;
   bool _isConnected = false;
   List<BluetoothService> _services = [];
 
-  _initBluetooth() async {
+  _initBluetooth(String targetMacAddress) async {
     await _bluetoothHelper.startScan((device) async {
       if (device.remoteId.toString() == targetMacAddress) {
         await _bluetoothHelper.stopScan();
@@ -65,11 +65,20 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    super.initState();
     () async {
       await _bluetoothHelper.requestLocationPermission();
-      _initBluetooth();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QRScanPage(
+            onScanned: (macAddress) {
+              _initBluetooth(macAddress);
+            },
+          ),
+        ),
+      );
     }();
-    super.initState();
   }
 
   @override
