@@ -20,6 +20,8 @@ dependencies:
   get: ^4.3.8
   qr_flutter: ^4.0.0
   flutter_barcode_scanner: ^2.0.0
+  firebase_core: ^3.4.1
+  firebase_database: ^11.1.2
 
 
 dev_dependencies:

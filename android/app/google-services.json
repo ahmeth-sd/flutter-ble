@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "533853765476",
+    "project_id": "smart-lock-925a3",
+    "storage_bucket": "smart-lock-925a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533853765476:android:53eec6fdf6e77a9e9b8471",
+        "android_client_info": {
+          "package_name": "com.example.flutter_ble"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6Or_xia7l-b_ijdgww1o01uFbjKWOXDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
