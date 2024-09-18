@@ -1,21 +1,11 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ble/qr_code_scanner.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'bluetooth_helper.dart';
-import 'connected_device_page.dart';
-import 'qr_scan_page.dart';
+import 'connected_device_page.dart'; // Import the ConnectedPage
 
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -45,9 +35,9 @@ class MyHomePageState extends State<MyHomePage> {
   bool _isConnected = false;
   List<BluetoothService> _services = [];
 
-  _initBluetooth(String targetMacAddress) async {
+  _initBluetooth(String macAddress) async {
     await _bluetoothHelper.startScan((device) async {
-      if (device.remoteId.toString() == targetMacAddress) {
+      if (device.remoteId.toString() == macAddress) {
         await _bluetoothHelper.stopScan();
         try {
           await _bluetoothHelper.connectToDevice(context, device);
@@ -77,16 +67,6 @@ class MyHomePageState extends State<MyHomePage> {
     super.initState();
     () async {
       await _bluetoothHelper.requestLocationPermission();
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => QRScanPage(
-            onScanned: (macAddress) {
-              _initBluetooth(macAddress);
-            },
-          ),
-        ),
-      );
     }();
   }
 
@@ -98,7 +78,28 @@ class MyHomePageState extends State<MyHomePage> {
     body: Center(
       child: _isConnected
           ? Text('Bağlantı başarılı: ${_connectedDevice?.remoteId}')
-          : const CircularProgressIndicator(),
+          : Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QRViewExample(
+                    onScanned: (macAddress) {
+                      _initBluetooth(macAddress);
+                    },
+                  ),
+                ),
+              );
+            },
+            child: const Text('QR Kodunu Tara'),
+          ),
+        ],
+      ),
     ),
   );
 }
